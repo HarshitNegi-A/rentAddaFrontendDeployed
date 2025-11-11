@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ItemCard from "../components/ItemCard";
 
-const API_BASE = "https://rentaddabackenddeployed.up.railway.app"
+const API_BASE = "https://rentaddabackenddeployed-production.up.railway.app"
 
 const Home = () => {
   const [items, setItems] = useState([]);

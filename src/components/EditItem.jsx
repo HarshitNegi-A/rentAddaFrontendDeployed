@@ -9,7 +9,7 @@ const EditItem = () => {
   const navigate = useNavigate();
 
   // ✅ Backend base URL
-  const API_BASE ="https://rentaddabackenddeployed.up.railway.app"
+  const API_BASE ="https://rentaddabackenddeployed-production.up.railway.app"
 
   const [form, setForm] = useState({
     title: "",

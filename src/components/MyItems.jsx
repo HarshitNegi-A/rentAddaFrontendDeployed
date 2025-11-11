@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const MyItems = () => {
   // ✅ Backend API base URL
-  const API_BASE = "https://rentaddabackenddeployed.up.railway.app"
+  const API_BASE = "https://rentaddabackenddeployed-production.up.railway.app"
 
   const { token } = useContext(AuthContext);
   const [items, setItems] = useState([]);

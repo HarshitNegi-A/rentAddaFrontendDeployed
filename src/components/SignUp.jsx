@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const SignUp = () => {
-  const API_BASE = "https://rentaddabackenddeployed.up.railway.app"
+  const API_BASE = "https://rentaddabackenddeployed-production.up.railway.app"
 
 
   const [login, setLogin] = useState(false); // false = signup | true = login

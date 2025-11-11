@@ -3,7 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 
 // ✅ API BASE URL (local or production)
-const API ="https://rentaddabackenddeployed.up.railway.app"
+const API ="https://rentaddabackenddeployed-production.up.railway.app"
 
 const AddItem = () => {
   const [formData, setFormData] = useState({

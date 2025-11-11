@@ -4,7 +4,7 @@ import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 
 // ✅ API for local or production
-const API ="https://rentaddabackenddeployed.up.railway.app"
+const API ="https://rentaddabackenddeployed-production.up.railway.app"
 
 const ItemDetails = () => {
   const { id } = useParams();

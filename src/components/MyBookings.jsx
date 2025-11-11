@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const MyBookings = () => {
   // ✅ Backend base URL
-  const API_BASE ="https://rentaddabackenddeployed.up.railway.app"
+  const API_BASE ="https://rentaddabackenddeployed-production.up.railway.app"
 
   const { token } = useContext(AuthContext);
   const [bookings, setBookings] = useState([]);
