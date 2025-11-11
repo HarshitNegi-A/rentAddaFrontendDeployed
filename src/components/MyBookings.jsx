@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const MyBookings = () => {
   // ✅ Backend base URL
-  const API_BASE ="https://rentaddabackenddeployed-production.up.railway.app"
+  const API_BASE = "https://rentaddabackenddeployed-production.up.railway.app";
 
   const { token } = useContext(AuthContext);
   const [bookings, setBookings] = useState([]);
@@ -39,7 +39,7 @@ const MyBookings = () => {
       </p>
     );
 
-  // ✅ Status Badge
+  // ✅ Status Badge Colors
   const statusBadge = (status) => {
     switch (status) {
       case "accepted":
@@ -47,7 +47,6 @@ const MyBookings = () => {
       case "rejected":
         return "bg-red-100 text-red-700";
       default:
-      case "pending":
         return "bg-yellow-100 text-yellow-700";
     }
   };
@@ -58,8 +57,9 @@ const MyBookings = () => {
 
       <div className="space-y-5">
         {bookings.map((b) => {
+          // ✅ Use Cloudinary URL directly
           const imgUrl = b.Item?.image
-            ? `${API_BASE}/uploads/${b.Item.image}`
+            ? b.Item.image
             : "https://via.placeholder.com/200x150?text=No+Image";
 
           return (
@@ -73,6 +73,10 @@ const MyBookings = () => {
                   src={imgUrl}
                   className="w-full h-full object-cover"
                   alt={b.Item?.title}
+                  onError={(e) => {
+                    e.target.src =
+                      "https://via.placeholder.com/200x150?text=No+Image";
+                  }}
                 />
               </div>
 

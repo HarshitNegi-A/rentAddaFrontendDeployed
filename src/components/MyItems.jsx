@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const MyItems = () => {
   // ✅ Backend API base URL
-  const API_BASE = "https://rentaddabackenddeployed-production.up.railway.app"
+  const API_BASE = "https://rentaddabackenddeployed-production.up.railway.app";
 
   const { token } = useContext(AuthContext);
   const [items, setItems] = useState([]);
@@ -46,77 +46,89 @@ const MyItems = () => {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {items.map((it) => (
-          <div
-            key={it.id}
-            className="
-              bg-white rounded-xl shadow-md border 
-              hover:shadow-xl hover:border-blue-400 transition duration-300 
-              overflow-hidden
-            "
-          >
-            {/* ✅ Image */}
-            <div className="w-full h-48 overflow-hidden bg-gray-100">
-              <img
-                src={`${API_BASE}/uploads/${it.image}`}
-                className="w-full h-full object-cover hover:scale-110 transition duration-500"
-              />
-            </div>
+        {items.map((it) => {
+          // ✅ Use Cloudinary URL directly
+          const imageUrl = it.image
+            ? it.image
+            : "https://via.placeholder.com/400x300?text=No+Image";
 
-            {/* ✅ Content */}
-            <div className="p-4">
-              <h3 className="text-xl font-semibold text-gray-800 truncate">
-                {it.title}
-              </h3>
-
-              <p className="mt-1 text-gray-500 text-sm">{it.category}</p>
-
-              <p className="mt-3 text-lg font-bold text-gray-900">
-                ₹{it.pricePerDay}
-                <span className="text-sm text-gray-500 font-normal">
-                  {" "}
-                  / day
-                </span>
-              </p>
-
-              {/* ✅ Action buttons */}
-              <div className="flex gap-3 mt-5">
-                {/* Edit Button */}
-                <button
-                  onClick={() => navigate(`/edit-item/${it.id}`)}
-                  className="
-                    flex-1 px-4 py-2 rounded-lg bg-blue-600 text-white 
-                    font-semibold hover:bg-blue-700 transition
-                  "
-                >
-                  Edit
-                </button>
-
-                {/* Delete Button */}
-                <button
-                  onClick={() => deleteItem(it.id)}
-                  className="
-                    flex-1 px-4 py-2 rounded-lg bg-red-600 text-white 
-                    font-semibold hover:bg-red-700 transition
-                  "
-                >
-                  Delete
-                </button>
+          return (
+            <div
+              key={it.id}
+              className="
+                bg-white rounded-xl shadow-md border 
+                hover:shadow-xl hover:border-blue-400 transition duration-300 
+                overflow-hidden
+              "
+            >
+              {/* ✅ Image */}
+              <div className="w-full h-48 overflow-hidden bg-gray-100">
+                <img
+                  src={imageUrl}
+                  className="w-full h-full object-cover hover:scale-110 transition duration-500"
+                  alt={it.title}
+                  onError={(e) => {
+                    e.target.src =
+                      "https://via.placeholder.com/400x300?text=No+Image";
+                  }}
+                />
               </div>
 
-              {/* ✅ View Button */}
-              <Link
-                to={`/items/${it.id}`}
-                className="
-                  mt-3 inline-block text-blue-600 text-sm font-medium 
-                  hover:underline
-                "
-              >
-                View Item →
-              </Link>
+              {/* ✅ Content */}
+              <div className="p-4">
+                <h3 className="text-xl font-semibold text-gray-800 truncate">
+                  {it.title}
+                </h3>
+
+                <p className="mt-1 text-gray-500 text-sm">{it.category}</p>
+
+                <p className="mt-3 text-lg font-bold text-gray-900">
+                  ₹{it.pricePerDay}
+                  <span className="text-sm text-gray-500 font-normal">
+                    {" "}
+                    / day
+                  </span>
+                </p>
+
+                {/* ✅ Action buttons */}
+                <div className="flex gap-3 mt-5">
+                  {/* Edit Button */}
+                  <button
+                    onClick={() => navigate(`/edit-item/${it.id}`)}
+                    className="
+                      flex-1 px-4 py-2 rounded-lg bg-blue-600 text-white 
+                      font-semibold hover:bg-blue-700 transition
+                    "
+                  >
+                    Edit
+                  </button>
+
+                  {/* Delete Button */}
+                  <button
+                    onClick={() => deleteItem(it.id)}
+                    className="
+                      flex-1 px-4 py-2 rounded-lg bg-red-600 text-white 
+                      font-semibold hover:bg-red-700 transition
+                    "
+                  >
+                    Delete
+                  </button>
+                </div>
+
+                {/* ✅ View Button */}
+                <Link
+                  to={`/items/${it.id}`}
+                  className="
+                    mt-3 inline-block text-blue-600 text-sm font-medium 
+                    hover:underline
+                  "
+                >
+                  View Item →
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

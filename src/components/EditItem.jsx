@@ -9,7 +9,7 @@ const EditItem = () => {
   const navigate = useNavigate();
 
   // ✅ Backend base URL
-  const API_BASE ="https://rentaddabackenddeployed-production.up.railway.app"
+  const API_BASE = "https://rentaddabackenddeployed-production.up.railway.app";
 
   const [form, setForm] = useState({
     title: "",
@@ -34,6 +34,7 @@ const EditItem = () => {
         pricePerDay: item.pricePerDay,
       });
 
+      // ✅ store Cloudinary URL directly
       setExistingImage(item.image);
     };
 
@@ -62,7 +63,7 @@ const EditItem = () => {
     data.append("pricePerDay", form.pricePerDay);
 
     if (newImage) {
-      data.append("image", newImage);
+      data.append("image", newImage); // ✅ Backend uploads to Cloudinary
     }
 
     await axios.put(`${API_BASE}/items/${id}`, data, {
@@ -91,7 +92,9 @@ const EditItem = () => {
 
         {/* Description */}
         <div>
-          <label className="block mb-1 font-medium text-gray-600">Description</label>
+          <label className="block mb-1 font-medium text-gray-600">
+            Description
+          </label>
           <textarea
             name="description"
             className="w-full border border-gray-300 p-3 rounded-lg h-24 focus:ring-blue-500 focus:ring-2 transition"
@@ -142,9 +145,13 @@ const EditItem = () => {
 
           {existingImage && (
             <img
-              src={`${API_BASE}/uploads/${existingImage}`}
+              src={existingImage}  // ✅ Cloudinary URL directly
               alt="current"
               className="w-full h-48 object-cover rounded-lg mb-3 shadow"
+              onError={(e) => {
+                e.target.src =
+                  "https://via.placeholder.com/400x300?text=No+Image";
+              }}
             />
           )}
 
