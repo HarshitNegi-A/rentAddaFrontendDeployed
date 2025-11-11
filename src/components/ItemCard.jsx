@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 const ItemCard = ({ item }) => {
   if (!item) return null;
 
+  // ✅ Use Cloudinary URL directly
   const imageUrl = item.image
-    ? `http://localhost:3000/uploads/${item.image}`
+    ? item.image
     : "https://via.placeholder.com/400x300?text=No+Image";
 
   return (
@@ -33,29 +34,23 @@ const ItemCard = ({ item }) => {
 
       {/* ✅ Content */}
       <div className="p-4">
-
-        {/* ✅ Title */}
         <h3 className="text-lg font-semibold text-gray-900 truncate">
           {item.title}
         </h3>
 
-        {/* ✅ Category Badge */}
         <span className="inline-block mt-1 px-2 py-1 text-xs bg-blue-100 text-blue-600 rounded-md">
           {item.category || "General"}
         </span>
 
-        {/* ✅ Price */}
         <p className="mt-3 text-xl font-bold text-gray-900">
           ₹{item.pricePerDay}
           <span className="text-sm text-gray-500 font-normal"> / day</span>
         </p>
 
-        {/* ✅ Owner */}
         <p className="text-xs text-gray-500 mt-1">
           Owner: {item.User?.name || "Unknown"}
         </p>
 
-        {/* ✅ View Details CTA */}
         <span className="mt-3 inline-block text-blue-600 font-medium text-sm group-hover:underline">
           View Details →
         </span>

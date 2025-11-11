@@ -2,6 +2,9 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 
+// ✅ API BASE URL (local or production)
+const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 const AddItem = () => {
   const [formData, setFormData] = useState({
     title: "",
@@ -12,24 +15,19 @@ const AddItem = () => {
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const { token } = useContext(AuthContext);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
-
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-    }
+    if (file) setPreview(URL.createObjectURL(file));
   };
 
   const handleSubmit = async (e) => {
@@ -47,14 +45,19 @@ const AddItem = () => {
     data.append("category", formData.category);
     data.append("image", image);
 
+    setLoading(true);
+
     try {
-      const res = await axios.post("http://localhost:3000/items", data, {
+      const res = await axios.post(`${API}/items`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       });
 
+      alert("✅ Item Added Successfully!");
+
+      // Reset form
       setFormData({
         title: "",
         description: "",
@@ -64,11 +67,12 @@ const AddItem = () => {
       setImage(null);
       setPreview(null);
 
-      alert(res.data.message);
     } catch (err) {
-      console.error(err);
-      alert("Unable to add item");
+      console.error("UPLOAD FAILED:", err.response?.data || err);
+      alert("❌ Unable to add item. Check console.");
     }
+
+    setLoading(false);
   };
 
   return (
@@ -85,7 +89,7 @@ const AddItem = () => {
           <input
             type="text"
             name="title"
-            className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            className="w-full border border-gray-300 p-3 rounded-lg"
             placeholder="Ex: DSLR Camera, Study Table..."
             value={formData.title}
             onChange={handleChange}
@@ -98,7 +102,7 @@ const AddItem = () => {
           <label className="block font-medium mb-1 text-gray-600">Description</label>
           <textarea
             name="description"
-            className="w-full border border-gray-300 p-3 rounded-lg h-24 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            className="w-full border border-gray-300 p-3 rounded-lg h-24"
             placeholder="Brief item description..."
             value={formData.description}
             onChange={handleChange}
@@ -112,7 +116,7 @@ const AddItem = () => {
           <input
             type="number"
             name="pricePerDay"
-            className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            className="w-full border border-gray-300 p-3 rounded-lg"
             placeholder="Ex: 200"
             value={formData.pricePerDay}
             onChange={handleChange}
@@ -120,12 +124,12 @@ const AddItem = () => {
           />
         </div>
 
-        {/* Category Dropdown */}
+        {/* Category */}
         <div>
           <label className="block font-medium mb-1 text-gray-600">Category</label>
           <select
             name="category"
-            className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            className="w-full border border-gray-300 p-3 rounded-lg"
             value={formData.category}
             onChange={handleChange}
             required
@@ -151,7 +155,6 @@ const AddItem = () => {
             required
           />
 
-          {/* ✅ Image preview */}
           {preview && (
             <img
               src={preview}
@@ -161,14 +164,16 @@ const AddItem = () => {
           )}
         </div>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <button
           type="submit"
-          className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-md"
+          disabled={loading}
+          className={`w-full py-3 text-white font-semibold rounded-lg shadow-md 
+          ${loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}
+        `}
         >
-          Add Item
+          {loading ? "Uploading..." : "Add Item"}
         </button>
-
       </form>
     </div>
   );

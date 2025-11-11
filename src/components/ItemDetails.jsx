@@ -3,9 +3,12 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 
+// ✅ API for local or production
+const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 const ItemDetails = () => {
   const { id } = useParams();
-  const { token, userName } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [item, setItem] = useState(null);
@@ -13,7 +16,8 @@ const ItemDetails = () => {
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const navi=useNavigate()
+
+  // ✅ Decode user ID from JWT
   const getUserIdFromToken = () => {
     if (!token) return null;
     try {
@@ -26,42 +30,47 @@ const ItemDetails = () => {
 
   const loggedInUserId = getUserIdFromToken();
 
+  // ✅ Fetch item details
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/items/${id}`);
+        const res = await axios.get(`${API}/items/${id}`);
         setItem(res.data.item);
       } catch (err) {
-        console.error(err);
+        console.error("Item fetch error:", err);
       } finally {
         setLoading(false);
       }
     };
+
     fetchItem();
   }, [id]);
 
   if (loading) return <p className="p-6">Loading...</p>;
   if (!item) return <p className="p-6">Item not found</p>;
 
-  const imageUrl = `http://localhost:3000/uploads/${item.image}`;
+  // ✅ Use Cloudinary URL directly
+  const imageUrl = item.image
+    ? item.image
+    : "https://via.placeholder.com/400x300?text=No+Image";
 
+  // ✅ Booking Logic
   const bookNow = async () => {
     try {
       await axios.post(
-        "http://localhost:3000/bookings",
+        `${API}/bookings`,
         { itemId: item.id, startDate, endDate },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       alert("Booking successful!");
-      navigate('/my-bookings')
+      navigate("/my-bookings");
     } catch (err) {
       alert(err.response?.data?.message || "Booking failed");
     }
   };
 
   const isOwner = loggedInUserId === item.User?.id;
-
 
   return (
     <div className="max-w-5xl mx-auto p-6">
@@ -74,7 +83,6 @@ const ItemDetails = () => {
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
         />
 
-        {/* Category */}
         <span className="absolute top-4 left-4 bg-white/90 px-3 py-1 rounded-full text-sm font-medium text-gray-700 shadow">
           {item.category}
         </span>
@@ -102,7 +110,7 @@ const ItemDetails = () => {
         </p>
       </div>
 
-      {/* ✅ If Owner → Show message instead of booking UI */}
+      {/* ✅ If Owner */}
       {isOwner ? (
         <div className="mt-8 bg-yellow-100 border border-yellow-300 p-6 rounded-xl shadow">
           <p className="text-yellow-800 font-semibold text-lg">
@@ -119,10 +127,12 @@ const ItemDetails = () => {
         <>
           {/* ✅ Booking Section */}
           <div className="mt-8 bg-white p-6 rounded-xl shadow-lg border">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Book Now</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Book Now
+            </h3>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              {/* Start Date */}
+
               <div className="flex-1">
                 <label className="block mb-1 text-gray-600 font-medium">
                   Start Date
@@ -135,7 +145,6 @@ const ItemDetails = () => {
                 />
               </div>
 
-              {/* End Date */}
               <div className="flex-1">
                 <label className="block mb-1 text-gray-600 font-medium">
                   End Date
@@ -148,17 +157,22 @@ const ItemDetails = () => {
                 />
               </div>
             </div>
-            {token?<button
-              onClick={bookNow}
-              className="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition shadow-md"
-            >
-              Confirm Booking
-            </button>:<Link to='/signup'><button
-              className="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition shadow-md"
-            >
-              Sign up to book
-            </button></Link>}
-            
+
+            {/* ✅ Booking Button or Sign Up */}
+            {token ? (
+              <button
+                onClick={bookNow}
+                className="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition shadow-md"
+              >
+                Confirm Booking
+              </button>
+            ) : (
+              <Link to="/signup">
+                <button className="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition shadow-md">
+                  Sign up to book
+                </button>
+              </Link>
+            )}
           </div>
         </>
       )}
