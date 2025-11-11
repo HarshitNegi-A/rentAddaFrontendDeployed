@@ -4,12 +4,15 @@ import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 
 const MyItems = () => {
+  // ✅ Backend API base URL
+  const API_BASE = "https://rentaddabackenddeployed.up.railway.app"
+
   const { token } = useContext(AuthContext);
   const [items, setItems] = useState([]);
   const navigate = useNavigate();
 
   const loadItems = async () => {
-    const res = await axios.get("http://localhost:3000/items/mine", {
+    const res = await axios.get(`${API_BASE}/items/mine`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     setItems(res.data.items);
@@ -23,7 +26,7 @@ const MyItems = () => {
   const deleteItem = async (id) => {
     if (!confirm("Delete this item?")) return;
 
-    await axios.delete(`http://localhost:3000/items/${id}`, {
+    await axios.delete(`${API_BASE}/items/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -55,7 +58,7 @@ const MyItems = () => {
             {/* ✅ Image */}
             <div className="w-full h-48 overflow-hidden bg-gray-100">
               <img
-                src={`http://localhost:3000/uploads/${it.image}`}
+                src={`${API_BASE}/uploads/${it.image}`}
                 className="w-full h-full object-cover hover:scale-110 transition duration-500"
               />
             </div>

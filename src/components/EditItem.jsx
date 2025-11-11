@@ -8,6 +8,9 @@ const EditItem = () => {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  // ✅ Backend base URL
+  const API_BASE ="https://rentaddabackenddeployed.up.railway.app"
+
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -21,7 +24,7 @@ const EditItem = () => {
 
   useEffect(() => {
     const loadItem = async () => {
-      const res = await axios.get(`http://localhost:3000/items/${id}`);
+      const res = await axios.get(`${API_BASE}/items/${id}`);
       const item = res.data.item;
 
       setForm({
@@ -62,7 +65,7 @@ const EditItem = () => {
       data.append("image", newImage);
     }
 
-    await axios.put(`http://localhost:3000/items/${id}`, data, {
+    await axios.put(`${API_BASE}/items/${id}`, data, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -74,7 +77,6 @@ const EditItem = () => {
       <h2 className="text-2xl font-bold mb-4 text-gray-800">Edit Item</h2>
 
       <form onSubmit={handleSubmit} className="space-y-5">
-
         {/* Title */}
         <div>
           <label className="block mb-1 font-medium text-gray-600">Title</label>
@@ -121,7 +123,9 @@ const EditItem = () => {
 
         {/* Price */}
         <div>
-          <label className="block mb-1 font-medium text-gray-600">Price Per Day (₹)</label>
+          <label className="block mb-1 font-medium text-gray-600">
+            Price Per Day (₹)
+          </label>
           <input
             type="number"
             name="pricePerDay"
@@ -138,7 +142,7 @@ const EditItem = () => {
 
           {existingImage && (
             <img
-              src={`http://localhost:3000/uploads/${existingImage}`}
+              src={`${API_BASE}/uploads/${existingImage}`}
               alt="current"
               className="w-full h-48 object-cover rounded-lg mb-3 shadow"
             />

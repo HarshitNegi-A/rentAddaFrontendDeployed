@@ -3,7 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 
 // ✅ API BASE URL (local or production)
-const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API ="https://rentaddabackenddeployed.up.railway.app"
 
 const AddItem = () => {
   const [formData, setFormData] = useState({

@@ -4,6 +4,9 @@ import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 
 const MyBookings = () => {
+  // ✅ Backend base URL
+  const API_BASE ="https://rentaddabackenddeployed.up.railway.app"
+
   const { token } = useContext(AuthContext);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +16,7 @@ const MyBookings = () => {
 
     const loadBookings = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/bookings/mine", {
+        const res = await axios.get(`${API_BASE}/bookings/mine`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -56,7 +59,7 @@ const MyBookings = () => {
       <div className="space-y-5">
         {bookings.map((b) => {
           const imgUrl = b.Item?.image
-            ? `http://localhost:3000/uploads/${b.Item.image}`
+            ? `${API_BASE}/uploads/${b.Item.image}`
             : "https://via.placeholder.com/200x150?text=No+Image";
 
           return (

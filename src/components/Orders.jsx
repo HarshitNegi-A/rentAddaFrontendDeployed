@@ -4,11 +4,14 @@ import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 
 const Orders = () => {
+  // ✅ Backend URL variable here
+  const API_BASE ="https://rentaddabackenddeployed.up.railway.app"
+
   const { token } = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
 
   const loadOrders = async () => {
-    const res = await axios.get("http://localhost:3000/orders", {
+    const res = await axios.get(`${API_BASE}/orders`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     setOrders(res.data.orders);
@@ -17,7 +20,7 @@ const Orders = () => {
   const updateStatus = async (bookingId, status) => {
     try {
       await axios.put(
-        `http://localhost:3000/orders/${bookingId}/status`,
+        `${API_BASE}/orders/${bookingId}/status`,
         { status },
         { headers: { Authorization: `Bearer ${token}` } }
       );

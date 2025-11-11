@@ -4,7 +4,7 @@ import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 
 // ✅ API for local or production
-const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API ="https://rentaddabackenddeployed.up.railway.app"
 
 const ItemDetails = () => {
   const { id } = useParams();

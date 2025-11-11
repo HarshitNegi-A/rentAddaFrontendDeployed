@@ -3,7 +3,7 @@ import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { useParams } from "react-router-dom";
 
-const API = "http://localhost:3000";
+const API ="https://rentaddabackenddeployed.up.railway.app"
 
 const ChatRoom = () => {
   const { bookingId } = useParams();

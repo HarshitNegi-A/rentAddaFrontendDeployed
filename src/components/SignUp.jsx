@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const SignUp = () => {
+  const API_BASE = "https://rentaddabackenddeployed.up.railway.app"
+
+
   const [login, setLogin] = useState(false); // false = signup | true = login
   const [error, setError] = useState(null);
 
@@ -30,9 +33,11 @@ const SignUp = () => {
 
     try {
       const endpoint = login ? "login" : "signup";
-      const res = await axios.post(`http://localhost:3000/${endpoint}`, form);
 
-      loginAuth(res.data.token, res.data.userName,res.data.userId);
+      // ✅ Use API_BASE instead of localhost
+      const res = await axios.post(`${API_BASE}/${endpoint}`, form);
+
+      loginAuth(res.data.token, res.data.userName, res.data.userId);
       navi("/");
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong");
@@ -43,22 +48,17 @@ const SignUp = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
 
-        {/* ✅ Title */}
         <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">
           {login ? "Welcome Back!" : "Create Your RentAdda Account"}
         </h2>
 
-        {/* ✅ Error Message */}
         {error && (
           <div className="bg-red-100 text-red-600 p-3 rounded-lg mb-4 text-sm text-center">
             {error}
           </div>
         )}
 
-        {/* ✅ Form */}
         <form onSubmit={handleFormSubmit} className="space-y-4">
-
-          {/* Name (Signup Only) */}
           {!login && (
             <div>
               <label className="block text-gray-700 font-medium mb-1">
@@ -76,7 +76,6 @@ const SignUp = () => {
             </div>
           )}
 
-          {/* Email */}
           <div>
             <label className="block text-gray-700 font-medium mb-1">
               Email
@@ -92,7 +91,6 @@ const SignUp = () => {
             />
           </div>
 
-          {/* Password */}
           <div>
             <label className="block text-gray-700 font-medium mb-1">
               Password
@@ -108,7 +106,6 @@ const SignUp = () => {
             />
           </div>
 
-          {/* ✅ Submit Button */}
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 transition"
@@ -117,7 +114,6 @@ const SignUp = () => {
           </button>
         </form>
 
-        {/* ✅ Toggle Login/Signup */}
         <p className="text-center mt-4 text-gray-600">
           {login ? "New here?" : "Already have an account?"}{" "}
           <button
